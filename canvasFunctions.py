@@ -22,4 +22,10 @@ def generateGridArray(row,col):
     return arr
 
 
-
+def displayGridArray(gridCanvas,gridArray,gridGap,allColor):
+    gridCanvas.delete('square')
+    for r in range(len(gridArray)):
+        for c in range(len(gridArray[0])):
+            if gridArray[r][c] !=0:
+                gridCanvas.create_rectangle(c*gridGap,r*gridGap,c*gridGap +gridGap,r*gridGap +gridGap,tag = 'square',fill = allColor[gridArray[r][c]-1])
+                
