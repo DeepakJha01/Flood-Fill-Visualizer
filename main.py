@@ -1,37 +1,27 @@
 
-from canvasFunctions import createGrid,generateGridArray
+from canvasFunctions import createGrid,generateGridArray,displayGridArray
 import tkinter as tk
 from tkinter import ttk
 
 ##------FUNCTIONS----------------------------------
 def updateGridArray(x,y):
-    global gridArray
+    global gridArray, targetCoord, targetCoordValue
 
-    if activeColor.get()=='red':
-        gridArray[x][y] = 1
-    elif activeColor.get()=='blue':
-        gridArray[x][y] = 2
-    elif activeColor.get()=='yellow':
-        gridArray[x][y] = 3
-    elif activeColor.get()=='orange':
-        gridArray[x][y] = 4
-    elif activeColor.get()=='pink':
-        gridArray[x][y] = 5
-    elif activeColor.get()=='black':
-        gridArray[x][y] = 6
-    elif activeColor.get()=='green':
-        gridArray[x][y] = 7
-    elif activeColor.get()=='brown':
-        gridArray[x][y] = 8
-    elif activeColor.get()=='white':
-        gridArray[x][y] = 9
+    color = activeColor.get()
+    if drawBool==True and selectTargetBool==False and fillBool==False:
+        gridArray[x][y] = allColor.index(color)+1
 
-def displayGridArray():
-    gridCanvas.delete('square')
-    for r in range(len(gridArray)):
-        for c in range(len(gridArray[0])):
-            if gridArray[r][c] !=0:
-                gridCanvas.create_rectangle(c*gridGap,r*gridGap,c*gridGap +gridGap,r*gridGap +gridGap,tag = 'square',fill = allColor[gridArray[r][c]-1])
+
+    elif selectTargetBool==True and drawBool==False and fillBool==False:
+
+        if targetCoord != None:
+            prev_x,prev_y = targetCoord
+            gridArray[prev_x][prev_y] = targetCoordValue
+
+        targetCoord = x, y
+        targetCoordValue = gridArray[x][y]
+        gridArray[x][y] = allColor.index(color) + 1
+
 
 
 def getDragCoords(event):
@@ -42,17 +32,36 @@ def getDragCoords(event):
     if (r>=0 and r<gridRow) and (c>=0 and c<gridCol):
 
         updateGridArray(r,c)
-        displayGridArray()
+        displayGridArray(gridCanvas,gridArray,gridGap,allColor)
     else:
         print("invalid")
 
 
 def resetCanvas():
-    global gridArray
+    global gridArray,drawBool,fillBool,selectTargetBool
+    drawBool = False
+    fillBool = False
+    selectTargetBool = False
     gridCanvas.delete('square')
     gridArray = generateGridArray(gridRow,gridCol)
 
+def drawCanvas():
+    global drawBool,fillBool, selectTargetBool
+    drawBool = True
+    fillBool = False
+    selectTargetBool = False
 
+def selectTarget():
+    global drawBool, fillBool, selectTargetBool
+    selectTargetBool = True
+    drawBool = False
+    fillBool = False
+
+def fillCanvas():
+    global drawBool, fillBool, selectTargetBool
+    fillBool = True
+    selectTargetBool = False
+    drawBool = False
 ###-----------------------------------------------------------------------------------
 
 
@@ -67,6 +76,11 @@ gridCol = gridWidth//gridGap
 gridLineWidth = 1
 gridBorderWidth = 5
 canvasBGColor = 'white'
+targetCoord = None
+targetCoordValue = None
+drawBool = False
+selectTargetBool = False
+fillBool = False
 allColor = ('red','blue','yellow','orange','pink','black','green','brown','white')
 gridArray = generateGridArray(gridRow,gridCol)
 
@@ -85,14 +99,20 @@ activeColor = ttk.Combobox(inputFrame, values=allColor,width=11, font = ('Comic 
 activeColor.grid(row=0, column=1,padx=5, pady=5)
 activeColor.current()
 
-resetButton = tk.Button(inputFrame,text = 'Reset',width = 12,bg = 'blue',fg = 'white',command = resetCanvas, font = ('Comic Sans MS',12))
-resetButton.grid(row=1, column=0,padx=5, pady=5)
+drawButton = tk.Button(inputFrame,text = 'Draw',width = 12,bg = '#66ff66',fg = 'black',command = drawCanvas, font = ('Comic Sans MS',12),activebackground= '#00cc66')
+drawButton.grid(row=1, column=0,padx=5, pady=5)
 
-floodFillButton = tk.Button(inputFrame,text='Fill',width = 12,bg = 'blue',fg = 'white',command = '', font = ('Comic Sans MS',12))
-floodFillButton.grid(row=1, column=1,padx=5, pady=5)
+resetButton = tk.Button(inputFrame,text = 'Reset',width = 12,bg = '#66ff66',fg = 'black',command = resetCanvas, font = ('Comic Sans MS',12),activebackground= '#00cc66')
+resetButton.grid(row=1, column=1,padx=5, pady=5)
 
-selectTargetButton = tk.Button(inputFrame,text='Select Target',width = 12,bg = 'blue',fg = 'white',command = '', font = ('Comic Sans MS',12))
-selectTargetButton.grid(row=0, column=2,padx=5, pady=5,rowspan=2)
+floodFillButton = tk.Button(inputFrame,text='Fill',width = 12,bg = '#66ff66',fg = 'black',command = fillCanvas, font = ('Comic Sans MS',12),activebackground= '#00cc66')
+floodFillButton.grid(row=1, column=2,padx=5, pady=5)
+
+selectTargetButton = tk.Button(inputFrame,text='Select Target',width = 12,height =1, bg = '#66ff66',fg = 'black',command = selectTarget, font = ('Comic Sans MS',12),activebackground= '#00cc66')
+selectTargetButton.grid(row=0, column=2,padx=5, pady=5)
+
+# target = tk.Label(inputFrame, text='target = ('+str(targetCoord[0])+', '+str(targetCoord[1])+')',bg='black', fg='white',width = 12,height = 1, font = ('Comic Sans MS',12))
+# target.grid(row=0, column=3, padx = 5,pady = 5)
 #-----
 
 
