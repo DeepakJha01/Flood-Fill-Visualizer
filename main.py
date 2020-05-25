@@ -81,6 +81,8 @@ targetCoordValue = None
 drawBool = False
 selectTargetBool = False
 fillBool = False
+frameFont = ('Comic Sans MS',12)
+activebg = '#00cc66'
 allColor = ('red','blue','yellow','orange','pink','black','green','brown','white')
 gridArray = generateGridArray(gridRow,gridCol)
 
@@ -92,23 +94,23 @@ inputFrame.pack()
 gridCanvas = tk.Canvas(root,bg = canvasBGColor,width = gridWidth,height = gridHeight)
 gridCanvas.pack()
 
-colorLabel = tk.Label(inputFrame, text='Choose Color ->',bg='black', fg='white',width = 12,height = 1, font = ('Comic Sans MS',12))
+colorLabel = tk.Label(inputFrame, text='Choose Color ->',bg='black', fg='white',width = 12,height=1, font=frameFont)
 colorLabel.grid(row=0, column=0, padx = 5,pady = 5)
 
-activeColor = ttk.Combobox(inputFrame, values=allColor,width=11, font = ('Comic Sans MS',12))
+activeColor = ttk.Combobox(inputFrame, values=allColor,width=11,font=frameFont)
 activeColor.grid(row=0, column=1,padx=5, pady=5)
 activeColor.current()
 
-drawButton = tk.Button(inputFrame,text = 'Draw',width = 12,bg = '#66ff66',fg = 'black',command = drawCanvas, font = ('Comic Sans MS',12),activebackground= '#00cc66')
+drawButton = tk.Button(inputFrame,text='Draw',width=12,bg = '#66ff66',fg ='black',command=drawCanvas,font=frameFont,activebackground=activebg)
 drawButton.grid(row=1, column=0,padx=5, pady=5)
 
-resetButton = tk.Button(inputFrame,text = 'Reset',width = 12,bg = '#66ff66',fg = 'black',command = resetCanvas, font = ('Comic Sans MS',12),activebackground= '#00cc66')
+resetButton = tk.Button(inputFrame,text='Reset',width=12,bg = '#66ff66',fg ='black',command=resetCanvas,font=frameFont,activebackground=activebg)
 resetButton.grid(row=1, column=1,padx=5, pady=5)
 
-floodFillButton = tk.Button(inputFrame,text='Fill',width = 12,bg = '#66ff66',fg = 'black',command = fillCanvas, font = ('Comic Sans MS',12),activebackground= '#00cc66')
+floodFillButton = tk.Button(inputFrame,text='Fill',width=12,bg = '#66ff66',fg ='black',command=fillCanvas,font=frameFont,activebackground=activebg)
 floodFillButton.grid(row=1, column=2,padx=5, pady=5)
 
-selectTargetButton = tk.Button(inputFrame,text='Select Target',width = 12,height =1, bg = '#66ff66',fg = 'black',command = selectTarget, font = ('Comic Sans MS',12),activebackground= '#00cc66')
+selectTargetButton = tk.Button(inputFrame,text='Select Target',width=12,height=1,bg ='#66ff66',fg='black',command=selectTarget,font=frameFont,activebackground=activebg)
 selectTargetButton.grid(row=0, column=2,padx=5, pady=5)
 
 # target = tk.Label(inputFrame, text='target = ('+str(targetCoord[0])+', '+str(targetCoord[1])+')',bg='black', fg='white',width = 12,height = 1, font = ('Comic Sans MS',12))
