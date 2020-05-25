@@ -1,5 +1,6 @@
 
 from canvasFunctions import createGrid,generateGridArray,displayGridArray
+from tkinter.messagebox import showinfo
 import tkinter as tk
 from tkinter import ttk
 
@@ -8,6 +9,7 @@ def updateGridArray(x,y):
     global gridArray, targetCoord, targetCoordValue
 
     color = activeColor.get()
+    # print('color = ',color)
     if drawBool==True and selectTargetBool==False and fillBool==False:
         gridArray[x][y] = allColor.index(color)+1
 
@@ -38,30 +40,55 @@ def getDragCoords(event):
 
 
 def resetCanvas():
-    global gridArray,drawBool,fillBool,selectTargetBool
+    global gridArray,drawBool,fillBool,selectTargetBool,targetCoord
     drawBool = False
     fillBool = False
     selectTargetBool = False
+    targetCoord = None
     gridCanvas.delete('square')
     gridArray = generateGridArray(gridRow,gridCol)
 
 def drawCanvas():
     global drawBool,fillBool, selectTargetBool
-    drawBool = True
-    fillBool = False
-    selectTargetBool = False
+
+    if activeColor.get() != '':
+        drawBool = True
+        fillBool = False
+        selectTargetBool = False
+    else:
+        showinfo('Error','Select Color first!')
 
 def selectTarget():
     global drawBool, fillBool, selectTargetBool
-    selectTargetBool = True
-    drawBool = False
-    fillBool = False
+
+    if activeColor.get() != '':
+        selectTargetBool = True
+        drawBool = False
+        fillBool = False
+    else:
+        showinfo('Error','Select Target Color first')
 
 def fillCanvas():
     global drawBool, fillBool, selectTargetBool
     fillBool = True
     selectTargetBool = False
     drawBool = False
+
+    if targetCoord != None:
+        floodFillAlgorithm(gridArray, targetCoord, targetCoordValue)
+    else:
+        showinfo('Error','Select Target Co-ordinates first!')
+
+
+def floodFillAlgorithm(gridArray,targetCoord,targetCoordValue):
+    fillColorValue = gridArray[targetCoord[0]][targetCoord[1]]
+    print(targetCoord,targetCoordValue)
+    print(fillColorValue)
+
+
+    #targetCoordValue-->old color value
+    #fillColorValue-->new color value
+
 ###-----------------------------------------------------------------------------------
 
 
@@ -113,8 +140,6 @@ floodFillButton.grid(row=1, column=2,padx=5, pady=5)
 selectTargetButton = tk.Button(inputFrame,text='Select Target',width=12,height=1,bg ='#66ff66',fg='black',command=selectTarget,font=frameFont,activebackground=activebg)
 selectTargetButton.grid(row=0, column=2,padx=5, pady=5)
 
-# target = tk.Label(inputFrame, text='target = ('+str(targetCoord[0])+', '+str(targetCoord[1])+')',bg='black', fg='white',width = 12,height = 1, font = ('Comic Sans MS',12))
-# target.grid(row=0, column=3, padx = 5,pady = 5)
 #-----
 
 
