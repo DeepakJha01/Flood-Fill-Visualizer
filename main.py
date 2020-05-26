@@ -30,13 +30,13 @@ def getDragCoords(event):
     global gridArray
     x, y = event.x, event.y
     r, c = y // gridGap, x // gridGap
-    print(r, c)
+    # print(r, c)
     if (r>=0 and r<gridRow) and (c>=0 and c<gridCol):
 
         updateGridArray(r,c)
-        displayGridArray(gridCanvas,gridArray,gridGap,allColor)
-    else:
-        print("invalid")
+        displayGridArray(gridCanvas,gridArray,gridGap,allColor,targetCoord)
+    # else:
+    #     print("invalid")
 
 
 def resetCanvas():
@@ -101,9 +101,9 @@ def floodFillAlgorithm(targetCoord,targetCoordValue,replacementColorValue):
 
     gridArray[targetCoord[0]][targetCoord[1]] = replacementColorValue
 
-    print('about to display...')
-    displayGridArray(gridCanvas,gridArray,gridGap,allColor)
-    print('displayed...')
+    # print('about to display...')
+    displayGridArray(gridCanvas,gridArray,gridGap,allColor,targetCoord)
+    # print('displayed...')
     # time.sleep(0.1)
 
     N = [targetCoord[0]-1, targetCoord[1]]
@@ -134,7 +134,7 @@ gridCol = gridWidth//gridGap
 gridLineWidth = 1
 gridBorderWidth = 5
 canvasBGColor = 'white'
-targetCoord = [-1,-1]#########
+targetCoord = [-1,-1]
 targetCoordValue = None
 drawBool = False
 selectTargetBool = False
