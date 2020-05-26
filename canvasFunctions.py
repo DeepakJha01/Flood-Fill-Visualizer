@@ -22,11 +22,16 @@ def generateGridArray(row,col):
     return arr
 
 
-def displayGridArray(gridCanvas,gridArray,gridGap,allColor):
+def displayGridArray(gridCanvas,gridArray,gridGap,allColor,targetCoord):
     gridCanvas.delete('square')
-    print('.....START...inside display....')
+    gridCanvas.delete('target')
+    # print('.....START...inside display....')
     for r in range(len(gridArray)):
         for c in range(len(gridArray[0])):
             if gridArray[r][c] !=0:
                 gridCanvas.create_rectangle(c*gridGap,r*gridGap,c*gridGap +gridGap,r*gridGap +gridGap,tag = 'square',fill = allColor[gridArray[r][c]])
-    print('.....END...inside display....')
+    if targetCoord != [-1,-1]:
+        c = targetCoord[1]
+        r = targetCoord[0]
+        gridCanvas.create_rectangle(c*gridGap,r*gridGap,c*gridGap +gridGap,r*gridGap +gridGap,tag='target',width = 5,outline='#cc33ff')
+    # print('.....END...inside display....')
