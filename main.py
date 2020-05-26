@@ -1,4 +1,5 @@
 
+import time
 from canvasFunctions import createGrid,generateGridArray,displayGridArray
 from tkinter.messagebox import showinfo
 import tkinter as tk
@@ -9,20 +10,19 @@ def updateGridArray(x,y):
     global gridArray, targetCoord, targetCoordValue
 
     color = activeColor.get()
-    # print('color = ',color)
     if drawBool==True and selectTargetBool==False and fillBool==False:
-        gridArray[x][y] = allColor.index(color)+1
+        gridArray[x][y] = allColor.index(color)
 
 
     elif selectTargetBool==True and drawBool==False and fillBool==False:
 
-        if targetCoord != None:
-            prev_x,prev_y = targetCoord
+        if targetCoord != [-1,-1]:
+            prev_x,prev_y = targetCoord[0],targetCoord[1]
             gridArray[prev_x][prev_y] = targetCoordValue
 
-        targetCoord = x, y
+        targetCoord[0],targetCoord[1] = x, y
         targetCoordValue = gridArray[x][y]
-        gridArray[x][y] = allColor.index(color) + 1
+        # gridArray[x][y] = allColor.index(color) + 1
 
 
 
@@ -44,7 +44,7 @@ def resetCanvas():
     drawBool = False
     fillBool = False
     selectTargetBool = False
-    targetCoord = None
+    targetCoord[0],targetCoord[1] = -1,-1
     gridCanvas.delete('square')
     gridArray = generateGridArray(gridRow,gridCol)
 
@@ -69,21 +69,51 @@ def selectTarget():
         showinfo('Error','Select Target Color first')
 
 def fillCanvas():
-    global drawBool, fillBool, selectTargetBool
+    global drawBool, fillBool, selectTargetBool,targetCoord
     fillBool = True
     selectTargetBool = False
     drawBool = False
 
-    if targetCoord != None:
-        floodFillAlgorithm(gridArray, targetCoord, targetCoordValue)
+    if targetCoord != [-1,-1]:
+        replacementColorValue = allColor.index(activeColor.get())
+        floodFillAlgorithm(targetCoord, targetCoordValue,replacementColorValue)
+        targetCoord = [-1,-1]
     else:
         showinfo('Error','Select Target Co-ordinates first!')
 
 
-def floodFillAlgorithm(gridArray,targetCoord,targetCoordValue):
-    fillColorValue = gridArray[targetCoord[0]][targetCoord[1]]
-    print(targetCoord,targetCoordValue)
-    print(fillColorValue)
+def floodFillAlgorithm(targetCoord,targetCoordValue,replacementColorValue):
+    global gridArray,gridRow,gridCol
+    # print('inside flood-fill...')
+    # print('target-coord :',targetCoord)
+    # print('target-coord-value :',targetCoordValue)
+    # print('replacement-color-value : ',replacementColorValue)
+    # print('current-color-value : ',gridArray[targetCoord[0]][targetCoord[1]])
+    # print('gridArrayValue :',targetCoord[0], targetCoord[1])
+    # print(targetCoord,defaultColorValue,replacementColorValue)
+    if replacementColorValue == targetCoordValue:
+        return
+    if (targetCoord[0]<0 or targetCoord[0]>=gridRow) or (targetCoord[1]<0 or targetCoord[1]>=gridCol):
+        return
+    if gridArray[targetCoord[0]][targetCoord[1]] != targetCoordValue:
+        return
+
+
+    gridArray[targetCoord[0]][targetCoord[1]] = replacementColorValue
+
+    print('about to display...')
+    displayGridArray(gridCanvas,gridArray,gridGap,allColor)
+    print('displayed...')
+    # time.sleep(0.1)
+
+    N = [targetCoord[0]-1, targetCoord[1]]
+    S = [targetCoord[0]+1, targetCoord[1]]
+    E = [targetCoord[0], targetCoord[1]+1]
+    W = [targetCoord[0], targetCoord[1]-1]
+    floodFillAlgorithm(N,targetCoordValue,replacementColorValue)
+    floodFillAlgorithm(S,targetCoordValue,replacementColorValue)
+    floodFillAlgorithm(E,targetCoordValue,replacementColorValue)
+    floodFillAlgorithm(W,targetCoordValue,replacementColorValue)
 
 
     #targetCoordValue-->old color value
@@ -94,6 +124,7 @@ def floodFillAlgorithm(gridArray,targetCoord,targetCoordValue):
 
 root = tk.Tk()
 root.config(bg='#80ffff')
+root.title('Flood-Fill Algorithm Visualizer')
 
 gridWidth = 800
 gridHeight = 600
@@ -103,14 +134,14 @@ gridCol = gridWidth//gridGap
 gridLineWidth = 1
 gridBorderWidth = 5
 canvasBGColor = 'white'
-targetCoord = None
+targetCoord = [-1,-1]#########
 targetCoordValue = None
 drawBool = False
 selectTargetBool = False
 fillBool = False
 frameFont = ('Comic Sans MS',12)
 activebg = '#00cc66'
-allColor = ('red','blue','yellow','orange','pink','black','green','brown','white')
+allColor = ('white','red','blue','yellow','orange','pink','black','green','brown')
 gridArray = generateGridArray(gridRow,gridCol)
 
 
