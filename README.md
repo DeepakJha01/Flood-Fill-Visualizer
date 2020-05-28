@@ -5,4 +5,4 @@ Flood-Fill Algorithm has two approaches<br>
 1. 4 connected approach<br>
 2. 8 connected approach
 <br>
-Here, 4 connected approach is used.
+Here, 4 connected approach is implemented here.
