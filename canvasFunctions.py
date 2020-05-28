@@ -1,5 +1,7 @@
 import time
 
+max_time = 0.25
+
 def createGrid(gridCanvas, gridWidth, gridHeight, gridGap, gridBorderWidth, gridLineWidth):
 
     #--create horizontal lines
@@ -22,19 +24,21 @@ def generateGridArray(row, col):
     return arr
 
 
-def displayGridArray(gridCanvas,gridArray,gridRow,gridCol,gridGap,allColor,targetCoord,fillBool):
+def displayGridArray(gridCanvas,gridArray,gridRow,gridCol,gridGap,allColor,targetCoord,fillBool,sleepTime):
     gridCanvas.delete('square')     #to delete all previous rectangles
     gridCanvas.delete('target')     #to delete previous target grid boundary
 
     for r in range(gridRow):
         for c in range(gridCol):
             if gridArray[r][c] !=0:
-                gridCanvas.create_rectangle(c*gridGap,r*gridGap,c*gridGap +gridGap,r*gridGap +gridGap,tag = 'square',fill = allColor[gridArray[r][c]])
+                gridCanvas.create_rectangle(c*gridGap,r*gridGap,c*gridGap +gridGap,r*gridGap +gridGap,tag = 'square',
+                                            fill = allColor[gridArray[r][c]-1])
 
     if targetCoord != [-1,-1]:
         c = targetCoord[1]
         r = targetCoord[0]
-        gridCanvas.create_rectangle(c*gridGap,r*gridGap,c*gridGap +gridGap,r*gridGap +gridGap,tag='target',width = 5,outline='#cc33ff')
+        gridCanvas.create_rectangle(c*gridGap,r*gridGap,c*gridGap +gridGap,r*gridGap +gridGap,tag='target',width = 5,
+                                    outline='#cc33ff')
 
     if fillBool:
-        time.sleep(0.5)
+        time.sleep(max_time - (sleepTime*max_time/100))
