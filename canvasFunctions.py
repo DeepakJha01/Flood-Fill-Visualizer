@@ -42,3 +42,5 @@ def displayGridArray(gridCanvas,gridArray,gridRow,gridCol,gridGap,allColor,targe
 
     if fillBool:
         time.sleep(max_time - (sleepTime*max_time/100))
+        
+    
