@@ -70,21 +70,25 @@ def selectTarget():
 
 
 def fillCanvas():
-    global drawBool, fillBool, selectTargetBool,targetCoord, eraseBool
+    global drawBool, fillBool, selectTargetBool,targetCoord, eraseBool,fillVisited
     fillBool = True
     drawBool, eraseBool, selectTargetBool = False, False, False
 
     if targetCoord != [-1,-1]:
         replacementColorValue = allColor.index(activeColor.get())+1
         floodFillAlgorithm(targetCoord, targetCoordValue,replacementColorValue)
+        # displayGridArray(gridCanvas, gridArray, gridRow, gridCol, gridGap, allColor, targetCoord, fillBool,
+        #                  speedInput.get())
+        # root.update()
         targetCoord = [-1,-1]
         fillBool,drawBool = False,True
+        fillVisited = set()
     else:
         showinfo('Error','Select Target Co-ordinates first!')
 
 
 def floodFillAlgorithm(targetCoord, targetCoordValue, replacementColorValue):
-    global gridArray,gridRow,gridCol
+    global gridArray,gridRow,gridCol,fillVisited
     displayGridArray(gridCanvas, gridArray, gridRow, gridCol, gridGap, allColor, targetCoord,fillBool,speedInput.get())
     root.update()
 
@@ -96,11 +100,16 @@ def floodFillAlgorithm(targetCoord, targetCoordValue, replacementColorValue):
         return
 
     gridArray[targetCoord[0]][targetCoord[1]] = replacementColorValue
+    fillVisited.add((targetCoord[0],targetCoord[1]))
 
-    floodFillAlgorithm([targetCoord[0]-1, targetCoord[1]], targetCoordValue, replacementColorValue) #North
-    floodFillAlgorithm([targetCoord[0], targetCoord[1]+1], targetCoordValue, replacementColorValue) #East
-    floodFillAlgorithm([targetCoord[0], targetCoord[1]-1], targetCoordValue, replacementColorValue) #West
-    floodFillAlgorithm([targetCoord[0]+1, targetCoord[1]], targetCoordValue, replacementColorValue) #South
+    if (targetCoord[0]-1,targetCoord[1]) not in fillVisited:
+        floodFillAlgorithm([targetCoord[0]-1, targetCoord[1]], targetCoordValue, replacementColorValue) #North
+    if (targetCoord[0], targetCoord[1]+1) not in fillVisited:
+        floodFillAlgorithm([targetCoord[0], targetCoord[1]+1], targetCoordValue, replacementColorValue) #East
+    if (targetCoord[0]+1, targetCoord[1]) not in fillVisited:
+        floodFillAlgorithm([targetCoord[0]+1, targetCoord[1]], targetCoordValue, replacementColorValue) #South
+    if (targetCoord[0], targetCoord[1]-1) not in fillVisited:
+        floodFillAlgorithm([targetCoord[0], targetCoord[1]-1], targetCoordValue, replacementColorValue) #West
 
 
 #Driver Code--------------------------------------------------
@@ -110,8 +119,8 @@ if __name__ == '__main__':
     root.title('Flood-Fill Algorithm Visualizer')
 
     #GLOBAL VARIABLES-----------------------------------------
-    gridWidth = 800
-    gridHeight = 600
+    gridWidth = 900
+    gridHeight = 500
     gridGap = 20  # do not decrease from 20-> causes maximum recursion depth exceeded
     gridRow = gridHeight // gridGap
     gridCol = gridWidth // gridGap
@@ -125,6 +134,7 @@ if __name__ == '__main__':
     activebg = '#00cc66'
     allColor = ('red', 'blue', 'yellow', 'orange', 'pink', 'black', 'green', 'brown')
     gridArray = generateGridArray(gridRow, gridCol)
+    fillVisited = set()
 
     # -------USER INTERFACE-------INPUTS---------------------------------
     inputFrame = tk.Frame(root, width=gridWidth, height=gridHeight // 4, bg='#000066')
